@@ -23,10 +23,6 @@ exports.load = function (req, res, next, quizId) {
 // ARRAY
 
 
-
-
-
-
 // GET /quizzes
 exports.index = function (req, res, next) {
 
@@ -202,35 +198,42 @@ exports.random_play = function (req, res, next){
 
 	if(!req.session.practica52){
 		req.session.practica52={
-			hechas:[-1]
+			hechas:[]
 		};
 	}
 
-	models.Quiz.count({where:{id:{$notIn:req.session.practica52.hechas}}})
-		.then(function(c){
-		        var r=models.Quiz.findAll(
-			{where:{id:{$notIn:req.session.practica52.hechas}}});
-       		 return r;
-		}).then(function(noHechas){
-			if(noHechas.length===0){
-	               		var aux= req.session.practica52.hechas.length;
-				req.session.practica52.hechas=[-1];
-				res.render('quizzes/random_nomore', {
-				score:aux
-			});
-			}else{
-				var a=Math.floor(Math.random()*noHechas.length);
-				var q=noHechas[a];
-		                req.session.practica52.hechas.push(q.id);
-				res.render('quizzes/random_play', {
-				quiz:q,
-		                score:req.session.practica52.hechas.length
-                });
-            }
-        }).catch(function(error) {
-        req.flash('error', 'Error al cargar el Quiz: ' + error.message);
-        next(error);
-    });
+	var hechas = req.session.practica52.hechas.length ? req.session.practica52.hechas : [-1];
+
+	//var hechas = req.session.practica52.hechas;
+
+	models.Quiz.count({where:{id:{$notIn:hechas}}})
+		.then(function(contador){
+				var a=Math.floor(Math.random()*contador);
+				var question = models.Quiz.findAll({
+					limit:1,
+		        	offset:a,
+		        	where:{id:{$notIn:hechas}}
+				});
+				return question;
+		        }).then(function(quizzes){
+		        	if(!quizzes[0]){ //length===0
+		        		var aux= req.session.practica52.hechas.length;
+		        		req.session.practica52.hechas=[];
+		        		res.render('quizzes/random_nomore', {
+						score:aux
+						});
+					}else{
+						req.session.practica52.hechas.push(quizzes[0].id);
+						res.render('quizzes/random_play', {
+							quiz:quizzes[0],
+		          			score:req.session.practica52.hechas.length-1
+                			});
+					}
+
+				}).catch(function(error) {
+  				      //req.flash('error', 'Error al cargar el Quiz: ' + error.message);
+      					  next(error);
+    			});
 };
 
 
@@ -242,34 +245,27 @@ exports.random_check = function (req, res, next){
 
     var result = answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim();
 
+	//var hechas = req.session.practica52.hechas;
 
 	if(!result){ //si fallo
-		req.session.hechas=[];
+		
+		req.session.practica52.hechas.length=req.session.practica52.hechas.length-1;
+		var aux= req.session.practica52.hechas.length;
+		req.session.practica52.hechas=[];
 		res.render('quizzes/random_result', {
 	        quiz: req.quiz,
         	result: result,
         	answer: answer,
-        	score:req.session.practica52.hechas.length
+        	score:aux
     		});
 	}else{
-                res.render('quizzes/random_result', {
-                quiz: req.quiz,
-                result: result,
-                answer: answer,
-                score:++req.session.practica52.hechas.length
-                });
+            res.render('quizzes/random_result', {
+            quiz: req.quiz,
+            result: result,
+            answer: answer,
+            score:req.session.practica52.hechas.length
+            });
 
 }
 };
-
-
-
-
-
-
-
-
-
-
-
 
