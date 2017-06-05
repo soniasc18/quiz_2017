@@ -200,7 +200,7 @@ exports.check = function (req, res, next) {
 exports.random_play = function (req, res, next){
 
 	//Si no existe el array de preguntas contestadas lo creo inicializado a -1
-	if(!req.session.aciertos) 
+	if(!req.session.aciertos)
 		req.session.aciertos=0;
 	if(!req.session.hechas)
 		req.session.hechas=[-1];
@@ -209,26 +209,25 @@ exports.random_play = function (req, res, next){
 	models.Quiz.count({where:{id:{$notIn:req.session.hechas}}})
 		.then(function(c){ //c es un entero 
 			//var a=Math.floor(Math.random()*c});
-            var r=models.Quiz.findAll({ //r es un array con todas las preguntas NO hechas
+		        var r=models.Quiz.findAll({ //r es un array con todas las preguntas NO hechas
 			where:{id:{$notIn:req.session.hechas}}
-		});
-        return r;
+			});
+       		 return r;
 		}).then(function(noHechas){ //noHechas es el array r que retornaba justo antes
 			if(noHechas.length===0){
-                req.session.aciertos=0;
-                req.session.hechas=[-1];
+        		        //req.session.aciertos=0;
+	               		req.session.hechas=[-1];
 				res.render('quizzes/random_nomore', {
-				score:req.session.hechas.length-1
+				score:req.session.aciertos
 			});
 			}else{
 				var a=Math.floor(Math.random()*noHechas.length);
 				var q=noHechas[a];
-                req.session.hechas.push(q.id);
-                //req.session.aciertos++;
+		                req.session.hechas.push(q.id);
+                		//if(req.session.aciertos!==0) ++req.session.aciertos;
 				res.render('quizzes/random_play', {
 				quiz:q,
-                //score:req.session.aciertos;
-				score:req.session.hechas.length-1
+		                score:req.session.aciertos++
                 });
             }
         }).catch(function(error) {
@@ -259,7 +258,7 @@ exports.random_check = function (req, res, next){
         quiz: req.quiz,
         result: result,
         answer: answer,
-        score:req.session.hechas.length-1;
+        score:req.session.aciertos
     });
-}
+
 };

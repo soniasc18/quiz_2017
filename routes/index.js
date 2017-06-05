@@ -21,7 +21,7 @@ router.param('quizId', quizController.load);
 
 //Renderizo la pag de play
 router.get('/quizzes/randomplay', quizController.random_play);
-router.get('/quizzes/randomcheck/:quizId?answer=respuesta', quizController.random_check);
+router.get('/quizzes/randomcheck/:quizId(\\d+)', quizController.random_check);
 //ponemos o quitamos answer=respues?????
 
 
@@ -38,8 +38,8 @@ router.get('/quizzes/:quizId(\\d+)/play',  quizController.play);
 router.get('/quizzes/:quizId(\\d+)/check', quizController.check);
 
 // Definición de rutas de sesion
-router.get('/session', sessionController.new);
-router.post('/session', sessionController.create);
-router.delete('/session', sessionController.destroy);
+//router.get('/session', sessionController.new);
+//router.post('/session', sessionController.create);
+//router.delete('/session', sessionController.destroy);
 
 module.exports = router;
