@@ -42,4 +42,10 @@ router.get('/quizzes/:quizId(\\d+)/check', quizController.check);
 //router.post('/session', sessionController.create);
 //router.delete('/session', sessionController.destroy);
 
+
+// Pagina de ayuda
+router.get('/help', function(req, res, next) {
+    res.render('help');
+});
+
 module.exports = router;
