@@ -1,7 +1,9 @@
+
 var express = require('express');
 var router = express.Router();
 
 var quizController = require('../controllers/quiz_controller');
+//var used = req.session...
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -13,9 +15,14 @@ router.get('/author', function(req, res, next) {
     res.render('author');
 });
 
-
 // Autoload de rutas que usen :quizId
 router.param('quizId', quizController.load);
+
+
+//Renderizo la pag de play
+router.get('/quizzes/randomplay', quizController.random_play);
+router.get('/quizzes/randomcheck/:quizId?answer=respuesta', quizController.random_check);
+//ponemos o quitamos answer=respues?????
 
 
 // Definición de rutas de /quizzes
@@ -30,5 +37,9 @@ router.delete('/quizzes/:quizId(\\d+)',    quizController.destroy);
 router.get('/quizzes/:quizId(\\d+)/play',  quizController.play);
 router.get('/quizzes/:quizId(\\d+)/check', quizController.check);
 
+// Definición de rutas de sesion
+router.get('/session', sessionController.new);
+router.post('/session', sessionController.create);
+router.delete('/session', sessionController.destroy);
 
 module.exports = router;
