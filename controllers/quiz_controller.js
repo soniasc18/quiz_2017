@@ -200,37 +200,31 @@ exports.check = function (req, res, next) {
 // GET /quizzes/randomplay
 exports.random_play = function (req, res, next){
 
-	//Si no existe el array de preguntas contestadas lo creo inicializado a -1
-	if(!req.session.aciertos)
-		req.session.aciertos=0;
-	if(!req.session.hechas){
-		req.session.hechas=[-1];
-		req.session.aciertos=0;
+	if(!req.session.practica52){
+		req.session.practica52={
+			hechas:[-1]
+		};
 	}
 
-	//Contamos las preguntas que NO estan hechas aun
-	models.Quiz.count({where:{id:{$notIn:req.session.hechas}}})
-		.then(function(c){ //c es un entero 
-			//var a=Math.floor(Math.random()*c});
-		        var r=models.Quiz.findAll({ //r es un array con todas las preguntas NO hechas
-			where:{id:{$notIn:req.session.hechas}}
-			});
+	models.Quiz.count({where:{id:{$notIn:req.session.practica52.hechas}}})
+		.then(function(c){
+		        var r=models.Quiz.findAll(
+			{where:{id:{$notIn:req.session.practica52.hechas}}});
        		 return r;
-		}).then(function(noHechas){ //noHechas es el array r que retornaba justo antes
+		}).then(function(noHechas){
 			if(noHechas.length===0){
-        		        //req.session.aciertos=0;
-	               		req.session.hechas=[-1];
+	               		var aux= req.session.practica52.hechas.length;
+				req.session.practica52.hechas=[-1];
 				res.render('quizzes/random_nomore', {
-				score:req.session.aciertos
+				score:aux
 			});
 			}else{
 				var a=Math.floor(Math.random()*noHechas.length);
 				var q=noHechas[a];
-		                req.session.hechas.push(q.id);
-                		//if(req.session.aciertos!==0) ++req.session.aciertos;
+		                req.session.practica52.hechas.push(q.id);
 				res.render('quizzes/random_play', {
 				quiz:q,
-		                score:req.session.aciertos
+		                score:req.session.practica52.hechas.length
                 });
             }
         }).catch(function(error) {
@@ -242,18 +236,7 @@ exports.random_play = function (req, res, next){
 
 //GET /quizzes/randomcheck/:quizId?answer=respuesta
 
-//vamos a tener que recuperar lo introducido en el formulario
-//	req.quiz.question = req.body.question;
-//	req.quiz.answer = req.body.answer;
 exports.random_check = function (req, res, next){
-
-    //Si no existe el array de preguntas contestadas lo creo inicializado a -1
-    if(!req.session.aciertos) 
-        req.session.aciertos=0;
-    if(!req.session.hechas){
-        req.session.hechas=[-1];
-	req.session.aciertos=0;
-	}
 
     var answer = req.query.answer || "";
 
@@ -266,19 +249,18 @@ exports.random_check = function (req, res, next){
 	        quiz: req.quiz,
         	result: result,
         	answer: answer,
-        	score:req.session.aciertos
+        	score:req.session.practica52.hechas.length
     		});
 	}else{
                 res.render('quizzes/random_result', {
                 quiz: req.quiz,
                 result: result,
                 answer: answer,
-                score:req.session.aciertos++
+                score:++req.session.practica52.hechas.length
                 });
 
-	}
+}
 };
-
 
 
 
