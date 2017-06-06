@@ -206,34 +206,36 @@ exports.random_play = function (req, res, next){
 
 	models.Quiz.count({where:{id:{$notIn:hechas}}})
 		.then(function(contador){
-			var a=Math.floor(Math.random()*contador);
-			var question = models.Quiz.findAll({
-				limit:1,
+				var a=Math.floor(Math.random()*contador);
+				var question = models.Quiz.findAll({
+					limit:1,
 		        	offset:a,
 		        	where:{id:{$notIn:hechas}}
-			});
-			return question;
+				});
+				return question;
 		        }).then(function(quizzes){
 		        	if(!quizzes[0]){
 		        		var aux= req.session.practica52.hechas.length;
 		        		req.session.practica52.hechas=[];
 		        		res.render('quizzes/random_nomore', {
-					score:aux
-					});
-				}else{
-					req.session.practica52.hechas.push(quizzes[0].id);
-					res.render('quizzes/random_play', {
-					quiz:quizzes[0],
-	          			score:req.session.practica52.hechas.length-1
+						score:aux
+						});
+					}else{
+						req.session.practica52.hechas.push(quizzes[0].id);
+						res.render('quizzes/random_play', {
+							quiz:quizzes[0],
+		          			score:req.session.practica52.hechas.length-1
                 			});
-				}
-				}).catch(function(error){
-      					  next(error);
+					}
+
+				}).catch(function(error) {
+  				     next(error);
     			});
 };
 
 
 //GET /quizzes/randomcheck/:quizId?answer=respuesta
+
 exports.random_check = function (req, res, next){
 
     var answer = req.query.answer || "";
@@ -241,6 +243,7 @@ exports.random_check = function (req, res, next){
     var result = answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim();
 
 	if(!result){ //si fallo
+		
 		req.session.practica52.hechas.length=req.session.practica52.hechas.length-1;
 		var aux= req.session.practica52.hechas.length;
 		req.session.practica52.hechas=[];
@@ -251,13 +254,12 @@ exports.random_check = function (req, res, next){
         	score:aux
     		});
 	}else{
-		res.render('quizzes/random_result', {
-		quiz: req.quiz,
-		result: result,
-		answer: answer,
-		score:req.session.practica52.hechas.length
-		});
+            res.render('quizzes/random_result', {
+            quiz: req.quiz,
+            result: result,
+            answer: answer,
+            score:req.session.practica52.hechas.length
+            });
 
 }
 };
-
