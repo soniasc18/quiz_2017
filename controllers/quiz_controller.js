@@ -192,7 +192,6 @@ exports.check = function (req, res, next) {
 
 
 
-
 // GET /quizzes/randomplay
 exports.random_play = function (req, res, next){
 
@@ -204,6 +203,8 @@ exports.random_play = function (req, res, next){
 
 	var hechas = req.session.practica52.hechas.length ? req.session.practica52.hechas : [-1];
 
+	//var hechas = req.session.practica52.hechas;
+
 	models.Quiz.count({where:{id:{$notIn:hechas}}})
 		.then(function(contador){
 				var a=Math.floor(Math.random()*contador);
@@ -214,7 +215,7 @@ exports.random_play = function (req, res, next){
 				});
 				return question;
 		        }).then(function(quizzes){
-		        	if(!quizzes[0]){
+		        	if(!quizzes[0]){ //length===0
 		        		var aux= req.session.practica52.hechas.length;
 		        		req.session.practica52.hechas=[];
 		        		res.render('quizzes/random_nomore', {
@@ -229,7 +230,8 @@ exports.random_play = function (req, res, next){
 					}
 
 				}).catch(function(error) {
-  				     next(error);
+  				      //req.flash('error', 'Error al cargar el Quiz: ' + error.message);
+      					  next(error);
     			});
 };
 
@@ -241,6 +243,8 @@ exports.random_check = function (req, res, next){
     var answer = req.query.answer || "";
 
     var result = answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim();
+
+	//var hechas = req.session.practica52.hechas;
 
 	if(!result){ //si fallo
 		
