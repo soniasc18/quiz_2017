@@ -123,4 +123,8 @@ router.delete('/quizzes/:quizId(\\d+)/tips/:tipId(\\d+)',
     tipController.destroy);
 
 
+router.post('/quizzes/:quizId(\\d+)/tips', tipController.create);
+
+
+
 module.exports = router;
