@@ -41,6 +41,7 @@ exports.create = function (req, res, next) {
         {
             text: req.body.text,
             QuizId: req.quiz.id
+	    AuthorId: req.session.user.id
         });
 
     tip.save()
@@ -97,8 +98,10 @@ exports.destroy = function (req, res, next) {
         		next(error);
     		});
 	}else{
-		req.flash('error', 'Error al eliminar la pista');
-                res.redirect('/quizzes/' + req.params.quizId);
+		console.log('ERROOOORRR');
+		res.send(403);
+		//req.flash('error', 'Error al eliminar la pista');
+                //res.redirect('/quizzes/' + req.params.quizId);
 	}
 };
 
