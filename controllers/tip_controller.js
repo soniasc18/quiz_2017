@@ -87,12 +87,20 @@ exports.accept = function (req, res, next) {
 // DELETE /quizzes/:quizId/tips/:tipId
 exports.destroy = function (req, res, next) {
 
-    req.tip.destroy()
-    .then(function () {
-        req.flash('success', 'Pista eliminada con éxito.');
-        res.redirect('/quizzes/' + req.params.quizId);
-    })
-    .catch(function (error) {
-        next(error);
-    });
+	if(req.session.user.isAdmin || req.tip.AuthorId===req.session.user.id){
+    		req.tip.destroy()//borra la tip en la BBDD
+    		.then(function () {
+        		req.flash('success', 'Pista eliminada con éxito.');
+        		res.redirect('/quizzes/' + req.params.quizId);
+    		})
+    		.catch(function (error) {
+        		next(error);
+    		});
+	}else{
+		req.flash('error', 'Error al eliminar la pista');
+                res.redirect('/quizzes/' + req.params.quizId);
+	}
 };
+
+//Que las pistas puedan ser borradas por sus administradores y autores
+

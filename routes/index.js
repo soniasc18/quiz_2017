@@ -6,15 +6,8 @@ var tipController = require('../controllers/tip_controller');
 var userController = require('../controllers/user_controller');
 var sessionController = require('../controllers/session_controller');
 
-//-----------------------------------------------------------
-
 // autologout
 router.all('*',sessionController.deleteExpiredUserSession);
-
-//-----------------------------------------------------------
-
-
-//-----------------------------------------------------------
 
 // History
 
@@ -33,8 +26,6 @@ router.get(/(?!\/new$|\/edit$|\/play$|\/check$|\/session$|\/(\d+)$)\/[^\/]*$/, f
     req.session.backURL = req.url;
     next();
 });
-
-//-----------------------------------------------------------
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -128,7 +119,7 @@ router.put('/quizzes/:quizId(\\d+)/tips/:tipId(\\d+)/accept',
     quizController.adminOrAuthorRequired,
     tipController.accept);
 router.delete('/quizzes/:quizId(\\d+)/tips/:tipId(\\d+)',
-    sessionController.loginRequired,
+    sessionController.loginRequired, //tipController.checkAdminOrAuthor
     tipController.destroy);
 
 
