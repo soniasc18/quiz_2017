@@ -1,7 +1,9 @@
+
 var express = require('express');
 var router = express.Router();
 
 var quizController = require('../controllers/quiz_controller');
+<<<<<<< HEAD
 var tipController = require('../controllers/tip_controller');
 var userController = require('../controllers/user_controller');
 var sessionController = require('../controllers/session_controller');
@@ -27,6 +29,9 @@ router.get(/(?!\/new$|\/edit$|\/play$|\/check$|\/session$|\/(\d+)$)\/[^\/]*$/, f
     next();
 });
 
+//var used = req.session...
+
+
 /* GET home page. */
 router.get('/', function (req, res, next) {
     res.render('index');
@@ -36,7 +41,6 @@ router.get('/', function (req, res, next) {
 router.get('/author', function (req, res, next) {
     res.render('author');
 });
-
 
 // Autoload de rutas que usen :quizId
 router.param('quizId', quizController.load);
@@ -76,6 +80,12 @@ router.delete('/users/:userId(\\d+)',
 
 router.get('/users/:userId(\\d+)/quizzes', quizController.index);     // ver las preguntas de un usuario
 
+
+
+//Renderizo la pag de play
+router.get('/quizzes/randomplay', quizController.random_play);
+router.get('/quizzes/randomcheck/:quizId(\\d+)', quizController.random_check);
+//ponemos o quitamos answer=respues?????
 
 
 // Definición de rutas de /quizzes
@@ -126,5 +136,15 @@ router.delete('/quizzes/:quizId(\\d+)/tips/:tipId(\\d+)',
 router.post('/quizzes/:quizId(\\d+)/tips', tipController.create);
 
 
+// Definición de rutas de sesion
+//router.get('/session', sessionController.new);
+//router.post('/session', sessionController.create);
+//router.delete('/session', sessionController.destroy);
+
+
+// Pagina de ayuda
+router.get('/help', function(req, res, next) {
+    res.render('help');
+});
 
 module.exports = router;

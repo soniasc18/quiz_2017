@@ -27,6 +27,8 @@ exports.load = function (req, res, next, quizId) {
     });
 };
 
+// ARRAY
+
 
 // MW que permite acciones solamente si al usuario logeado es admin o es el autor del quiz.
 exports.adminOrAuthorRequired = function(req, res, next){
@@ -224,3 +226,83 @@ exports.check = function (req, res, next) {
         answer: answer
     });
 };
+
+
+
+
+// GET /quizzes/randomplay
+exports.random_play = function (req, res, next){
+
+	if(!req.session.practica52){
+		req.session.practica52={
+			hechas:[]
+		};
+	}
+
+	var hechas = req.session.practica52.hechas.length ? req.session.practica52.hechas : [-1];
+
+	//var hechas = req.session.practica52.hechas;
+
+	models.Quiz.count({where:{id:{$notIn:hechas}}})
+		.then(function(contador){
+				var a=Math.floor(Math.random()*contador);
+				var question = models.Quiz.findAll({
+					limit:1,
+		        	offset:a,
+		        	where:{id:{$notIn:hechas}}
+				});
+				return question;
+		        }).then(function(quizzes){
+		        	if(!quizzes[0]){ //length===0
+		        		var aux= req.session.practica52.hechas.length;
+		        		req.session.practica52.hechas=[];
+		        		res.render('quizzes/random_nomore', {
+						score:aux
+						});
+					}else{
+						req.session.practica52.hechas.push(quizzes[0].id);
+						res.render('quizzes/random_play', {
+							quiz:quizzes[0],
+		          			score:req.session.practica52.hechas.length-1
+                			});
+					}
+
+				}).catch(function(error) {
+  				      //req.flash('error', 'Error al cargar el Quiz: ' + error.message);
+      					  next(error);
+    			});
+};
+
+
+//GET /quizzes/randomcheck/:quizId?answer=respuesta
+
+exports.random_check = function (req, res, next){
+
+    var answer = req.query.answer || "";
+
+    var result = answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim();
+
+	//var hechas = req.session.practica52.hechas;
+
+	if(!result){ //si fallo
+		
+		req.session.practica52.hechas.length=req.session.practica52.hechas.length-1;
+		var aux= req.session.practica52.hechas.length;
+		req.session.practica52.hechas=[];
+		res.render('quizzes/random_result', {
+	        quiz: req.quiz,
+        	result: result,
+        	answer: answer,
+        	score:aux
+    		});
+	}else{
+            res.render('quizzes/random_result', {
+            quiz: req.quiz,
+            result: result,
+            answer: answer,
+            score:req.session.practica52.hechas.length
+            });
+
+}
+};
+
