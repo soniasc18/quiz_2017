@@ -236,12 +236,6 @@ exports.random_play = function (req, res, next){
 //GET /quizzes/randomcheck/:quizId?answer=respuesta
 exports.random_check = function (req, res, next){
 
-	if(!req.session.practica52){
-        	req.session.practica52={
-                	hechas:[]
-                };
-        }
-
     var answer = req.query.answer || "";
 
     var result = answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim();
