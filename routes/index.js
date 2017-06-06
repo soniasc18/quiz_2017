@@ -3,7 +3,6 @@ var express = require('express');
 var router = express.Router();
 
 var quizController = require('../controllers/quiz_controller');
-<<<<<<< HEAD
 var tipController = require('../controllers/tip_controller');
 var userController = require('../controllers/user_controller');
 var sessionController = require('../controllers/session_controller');
