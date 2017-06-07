@@ -88,7 +88,10 @@ exports.accept = function (req, res, next) {
 // DELETE /quizzes/:quizId/tips/:tipId
 exports.destroy = function (req, res, next) {
 
-	if(req.session.user.isAdmin || req.tip.AuthorId===req.session.user.id){
+
+    var isTipAuthor = req.tip.AuthorId===req.session.user.id;
+
+	if(req.session.user.isAdmin || req.tip.AuthorId===req.session.user.id || isTipAuthor){
     		req.tip.destroy()//borra la tip en la BBDD
     		.then(function () {
         		req.flash('success', 'Pista eliminada con éxito.');
