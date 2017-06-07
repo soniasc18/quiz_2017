@@ -197,7 +197,7 @@ exports.random_play = function (req, res, next){
 
 	if(!req.session.practica52){
 		req.session.practica52={
-			hechas:[-1]
+			hechas:[]
 		};
 	}
 	if(!req.session.practica52)
