@@ -225,14 +225,8 @@ exports.random_play = function (req, res, next){
 					quiz:quizzes[0],
 	          			score:req.session.practica52.hechas.length-1
                 			});
-<<<<<<< HEAD
 					}
-
-				}).catch(function(error) {
-=======
-				}
 				}).catch(function(error){
->>>>>>> parent of 229a479... Version final
       					  next(error);
     			});
 };
@@ -247,10 +241,7 @@ exports.random_check = function (req, res, next){
     var result = answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim();
 
 	if(!result){ //si fallo
-<<<<<<< HEAD
 
-=======
->>>>>>> parent of 229a479... Version final
 		req.session.practica52.hechas.length=req.session.practica52.hechas.length-1;
 		var aux= req.session.practica52.hechas.length;
 		req.session.practica52.hechas=[];
@@ -270,7 +261,3 @@ exports.random_check = function (req, res, next){
 
 }
 };
-<<<<<<< HEAD
-=======
-
->>>>>>> parent of 229a479... Version final
