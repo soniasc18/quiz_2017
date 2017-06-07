@@ -28,8 +28,6 @@ router.get(/(?!\/new$|\/edit$|\/play$|\/check$|\/session$|\/(\d+)$)\/[^\/]*$/, f
     next();
 });
 
-//var used = req.session...
-
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -81,11 +79,9 @@ router.get('/users/:userId(\\d+)/quizzes', quizController.index);     // ver las
 
 
 
-//Renderizo la pag de play
+//random_play y random_check
 router.get('/quizzes/randomplay', quizController.random_play);
 router.get('/quizzes/randomcheck/:quizId(\\d+)', quizController.random_check);
-//ponemos o quitamos answer=respues?????
-
 
 // Definición de rutas de /quizzes
 router.get('/quizzes',
@@ -135,15 +131,10 @@ router.delete('/quizzes/:quizId(\\d+)/tips/:tipId(\\d+)',
 router.post('/quizzes/:quizId(\\d+)/tips', tipController.create);
 
 
-// Definición de rutas de sesion
-//router.get('/session', sessionController.new);
-//router.post('/session', sessionController.create);
-//router.delete('/session', sessionController.destroy);
-
-
 // Pagina de ayuda
 router.get('/help', function(req, res, next) {
     res.render('help');
 });
 
 module.exports = router;
+
