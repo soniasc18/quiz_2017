@@ -89,9 +89,9 @@ exports.accept = function (req, res, next) {
 exports.destroy = function (req, res, next) {
 
 
-    var isTipAuthor = req.tip.AuthorId===req.session.user.id;
+//    var isTipAuthor = req.tip.AuthorId===req.session.user.id;
 
-	if(req.session.user.isAdmin || req.tip.AuthorId===req.session.user.id || isTipAuthor){
+	if(req.session.user.isAdmin || req.tip.AuthorId===req.session.user.id){
     		req.tip.destroy()//borra la tip en la BBDD
     		.then(function () {
         		req.flash('success', 'Pista eliminada con éxito.');
