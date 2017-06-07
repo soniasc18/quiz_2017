@@ -200,8 +200,6 @@ exports.random_play = function (req, res, next){
 			hechas:[]
 		};
 	}
-	if(!req.session.practica52)
-		req.session.practica52=0;
 
 	var hechas = req.session.practica52.hechas.length ? req.session.practica52.hechas : [-1];
 
