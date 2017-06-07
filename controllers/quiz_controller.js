@@ -197,9 +197,11 @@ exports.random_play = function (req, res, next){
 
 	if(!req.session.practica52){
 		req.session.practica52={
-			hechas:[]
+			hechas:[-1]
 		};
 	}
+	if(!req.session.practica52)
+		req.session.practica52)=0;
 
 	var hechas = req.session.practica52.hechas.length ? req.session.practica52.hechas : [-1];
 
@@ -236,6 +238,16 @@ exports.random_play = function (req, res, next){
 //GET /quizzes/randomcheck/:quizId?answer=respuesta
 
 exports.random_check = function (req, res, next){
+
+	
+	if(!req.session.practica52){
+		req.session.practica52={
+			hechas:[-1]
+		};
+	}
+	if(!req.session.practica52)
+		req.session.practica52)=0;
+
 
     var answer = req.query.answer || "";
 
