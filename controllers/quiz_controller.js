@@ -234,12 +234,9 @@ exports.random_play = function (req, res, next){
 
 	if(!req.session.practica52){
 		req.session.practica52={
-			hechas:[-1]
+			hechas:[]
 		};
-	}
-	if (!req.session.practica52)
-		req.session.practica52=0; 
-
+	} 
 
 	var hechas = req.session.practica52.hechas.length ? req.session.practica52.hechas : [-1];
 
@@ -280,16 +277,6 @@ exports.random_check = function (req, res, next){
     var answer = req.query.answer || "";
 
     var result = answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim();
-
-
-	if(!req.session.practica52){
-		req.session.practica52={
-			hechas:[-1]
-		};
-	}
-	if (!req.session.practica52)
-		req.session.practica52=0;
-
 
 	if(!result){ //si fallo
 
